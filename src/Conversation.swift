@@ -254,7 +254,7 @@ public extension Conversation {
       
       #if os(iOS)
       let audioSession = AVAudioSession.sharedInstance()
-      try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.defaultToSpeaker, .allowBluetooth])
+      try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetooth, .mixWithOthers])
       try audioSession.setPreferredSampleRate(44100)
       try audioSession.setActive(true)
 
