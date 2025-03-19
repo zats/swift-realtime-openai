@@ -30,6 +30,8 @@ public final class Conversation: Sendable {
 
 	/// The current session for this conversation.
 	@MainActor public private(set) var session: Session?
+  
+  @MainActor public var onEntryAddedOrUpdate: ((Item) -> Void)?
 
 	/// A list of items in the conversation.
 	@MainActor public private(set) var entries: [Item] = []
@@ -330,6 +332,7 @@ private extension Conversation {
 				id = event.conversation.id
 			case let .conversationItemCreated(event):
 				entries.append(event.item)
+        onEntryAddedOrUpdate?(event.item)
 			case let .conversationItemDeleted(event):
 				entries.removeAll { $0.id == event.itemId }
 			case let .conversationItemInputAudioTranscriptionCompleted(event):
@@ -410,6 +413,7 @@ private extension Conversation {
 		closure(&message)
 
 		entries[index] = .message(message)
+    onEntryAddedOrUpdate?(entries[index])
 	}
 
 	@MainActor
@@ -421,6 +425,7 @@ private extension Conversation {
 		closure(&functionCall)
 
 		entries[index] = .functionCall(functionCall)
+    onEntryAddedOrUpdate?(entries[index])
 	}
 }
 
